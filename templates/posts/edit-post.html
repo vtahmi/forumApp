@@ -1,0 +1,11 @@
+{% extends 'common/base.html' %}
+{% load markdown_extras %}
+
+{% block content %}
+    <h1 style="color: #185adb">Edit Post</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="button-9">Update</button>
+    </form>
+{% endblock %}

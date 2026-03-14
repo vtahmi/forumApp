@@ -1,0 +1,41 @@
+{% extends 'common/base.html' %}
+{% load markdown_extras %}
+{% load get_recent_posts %}
+
+{% block title %}Dashboard - Posts{% endblock %}
+{% block content %}
+    <div class="container">
+        {% include 'common/search-bar.html' %}
+        {% get_recent_posts 5 recent_posts %}
+        <div class="posts">
+            {% for post in posts %}
+                <div class="post">
+                    <a class="post-url" href="{% url 'post-details' post.id %}">
+                        <h2>{{ post.title|capfirst }}</h2>
+                        <p>{{ post.content|truncatewords:8|markdown }}</p>
+                        <div class="post-meta">
+                            <span>Posted by {{ post.author|default:'Anonymous' }} on {{ post.date_created|date:'d/m/Y' }}</span>
+                        </div>
+                    </a>
+                </div>
+            {% empty %}
+                <p class="no-posts">No posts available.</p>
+            {% endfor %}
+        </div>
+        <div class="pagination">
+            <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+                <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+{% endblock %}

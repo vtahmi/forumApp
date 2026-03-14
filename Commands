@@ -1,0 +1,55 @@
+py manage.py makemigrations
+py manage.py migrate
+
+##no name
+py manage.py makemigrations --empty main_app
+
+##with name
+py manage.py makemigrations main_app --name set_orders --empty
+
+##create virtual environment
+py -m venv venv
+venv/Scripts/activate
+
+##create .zip
+tar.exe -a -cf project.zip main_app, orm_skeleton, caller.py, manage.py, requirements.txt
+
+##only for the app
+py manage.py showmigrations main_app
+
+
+##all migrations
+python manage.py showmigrations -l
+
+##delete migration
+py manage.py migrate posts zero
+
+py caller.py
+
+py manage.py createsuperuser
+
+py manage.py dbshell
+
+##run the admin
+py manage.py runserver
+
+pip install psycopg2-binary
+pip install psycopg2
+
+###Django moves back to the state of migration 0004 if the last migration is 0005
+python manage.py migrate posts 0002
+
+python.exe -m pip install --upgrade pip
+
+py manage.py startapp todo_app
+
+
+
+
+
+
+
+
+
+
+

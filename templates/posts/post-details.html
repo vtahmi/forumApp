@@ -1,0 +1,53 @@
+{% extends 'common/base.html' %}
+{% load markdown_extras %}
+
+{% block title %}Dashboard - Posts{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="posts">
+        <div class="post">
+            {% if post.image %}
+                <img src="{{ post.image.url }}" alt="img" width="150" height="150" class="img-fluid"/>
+            {% endif %}
+            <h2>{{ post.title|capfirst }}</h2>
+            <div class="icons">
+                <a href="{% url 'edit-post' post.id %}" title="Edit Post"><i class="fa-solid fa-pen-to-square"></i></a>
+                <a href="{% url 'delete-post' post.id %}" title="Delete Post"><i class="fa-solid fa-trash"></i></a>
+            </div>
+            <p>{{ post.content|truncatewords:8|markdown }}</p>
+            <div class="post-meta">
+                <span>Posted by {{ post.author|default:'Anonymous' }} on {{ post.date_created|date:'d/m/Y' }}</span>
+            </div>
+        </div>
+        <div>
+            <form method="post" class="form-inline">
+                {% csrf_token %}
+                {{ form_set.management_form }}
+                <div class="input-group">
+                    {% for form in form_set %}
+                        <div class="form-row d-flex">
+                           {{ form.content }}
+                            <div class="input-group-append">
+                                <button style="height: 50px" class="btn btn-primary ms-2">Add Comment</button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </form>
+            <h2>Existing comments</h2>
+            <div class="comments-section">
+                {% for comment in post.comments.all  %}
+                    <div class="media mb-3 comment-item d-flex align-items-start">
+                        <img style="width: 100px; height: 100px; object-fit: cover;" class="ms-3 rounded-circle comment-avatar" src="https://imgs.search.brave.com/tSQ7qyU11uWI2i0NKNeRN7c7v3Cu6qa3-LE_Sj_9z9E/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMjA0/MTU3MjM5NS92ZWN0/b3IvYmxhbmstYXZh/dGFyLXBob3RvLXBs/YWNlaG9sZGVyLWlj/b24tdmVjdG9yLWls/bHVzdHJhdGlvbi5q/cGc_cz02MTJ4NjEy/Jnc9MCZrPTIwJmM9/d1N1aXUtc2kzM20t/ZWl3R2hYaVhfNUR2/S1FESE5TLS1DQkxj/eXV5NjhuMD0">
+                        <div class="comment-content d-flex">
+                            <h5>{{ comment.author }}</h5>
+                            <p>{{ comment.content }}</p>
+                            <p>{{ comment.date_created }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'common/base.html' %}
+{% load markdown_extras %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1 style="color: #185adb">Register</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="button-9">Submit</button>
+    </form>
+{% endblock %}
