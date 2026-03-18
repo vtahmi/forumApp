@@ -22,7 +22,7 @@ py manage.py showmigrations main_app
 python manage.py showmigrations -l
 
 ##delete migration
-py manage.py migrate posts zero
+py manage.py migrate accounts zero
 
 py caller.py
 
@@ -42,6 +42,21 @@ python manage.py migrate posts 0002
 python.exe -m pip install --upgrade pip
 
 py manage.py startapp todo_app
+
+GIT COMMANDS
+
+git add .
+git commit -m "Update"
+git push
+git pull
+
+git status
+
+git stash push -u -m "old laptop local changes"
+git stash list
+git stash pop
+
+
 
 
 
