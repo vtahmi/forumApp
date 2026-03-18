@@ -1,20 +1,18 @@
 from datetime import datetime
 
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import connection
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Q
 from django.forms.models import modelform_factory
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import classonlymethod, method_decorator
-from django.views.generic import TemplateView, View, RedirectView, CreateView, UpdateView, DeleteView, FormView, \
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView, RedirectView, CreateView, UpdateView, DeleteView, FormView, \
     DetailView, ListView
 
 from posts.decorators import measure_execution_time
-from posts.forms import PostForm, PostCreateForm, PostEditForm, PostDeleteForm, PostSearchForm, CommentFormSet
+from posts.forms import PostForm, PostCreateForm, PostDeleteForm, PostSearchForm, CommentFormSet
 from posts.mixins import TimeRestrictedMixin
 from posts.models import Post
 
@@ -41,6 +39,7 @@ class DashboardView(ListView):
     context_object_name = 'posts'
     paginate_by = 4
     form_class = PostSearchForm
+    permission_required = 'posts.approve_post'
 
     def get_context_data(self, **kwargs):
         kwargs.update({'search_form': self.form_class()})
@@ -49,6 +48,10 @@ class DashboardView(ListView):
     def get_queryset(self):
         queryset = self.model.objects.all()
         search_value = self.request.GET.get('query')
+
+        if not self.request.user.has_perm(permission_required):
+            queryset = queryset.filter(approved=True)
+
         if search_value:
             queryset = queryset.filter(
                 Q(title__icontains=search_value) |

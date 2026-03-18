@@ -40,7 +40,7 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = '__all__'
+        exclude = ('approved',)
         widgets = {
             'language': forms.RadioSelect(attrs={'class': 'language-select'}),
             'date_created': forms.DateTimeInput(format='%d/%m/%Y %H:%M'),

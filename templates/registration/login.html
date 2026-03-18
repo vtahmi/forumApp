@@ -8,5 +8,8 @@
         {% csrf_token %}
         {{ form }}
         <button type="submit" class="button-9">Submit</button>
+        <div class="mt-3">
+            <a class="text-center" href="{% url 'register' %}">Don't have an account? Register</a>
+        </div>
     </form>
 {% endblock %}

@@ -28,6 +28,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
+AUTHENTICATION_BACKENDS = [
+    'accounts.authentication.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # Application definition
 PROJECT_APPS = [
     'posts',
