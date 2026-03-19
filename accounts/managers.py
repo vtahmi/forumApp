@@ -8,7 +8,7 @@ from django.core.exceptions import PermissionDenied
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, username, email, password, **extra_fields):
+    def _create_user(self, email, username, password, **extra_fields):
         """
         Create and save a user with the given username, email, and password.
         """

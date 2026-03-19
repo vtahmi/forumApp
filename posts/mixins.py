@@ -14,7 +14,7 @@ class ReadOnlyMixin:
 
 class TimeRestrictedMixin:
     access_start_time = time(9, 0) # 9:00 AM
-    access_end_time = time(23, 0) # 5:00 PM
+    access_end_time = time(23, 59) # 5:00 PM
     def dispatch(self, request, *args, **kwargs):
         current_time = datetime.now().time()
         if not (self.access_start_time <= current_time <= self.access_end_time):
