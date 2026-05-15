@@ -37,7 +37,7 @@ AUTHENTICATION_BACKENDS = [
 # Application definition
 PROJECT_APPS = [
     'posts',
-    'accounts'
+    'accounts',
 ]
 
 INSTALLED_APPS = [

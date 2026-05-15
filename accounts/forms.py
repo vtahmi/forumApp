@@ -13,6 +13,11 @@ class CustomUserCreationForm(UserCreationForm):
         if UserModel.objects.filter(email=email).exists():
             raise ValidationError('Email already exists.')
         return email
+
+
+
+
+
     # comments to remove help_text
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
