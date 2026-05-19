@@ -113,6 +113,10 @@ class AddPostView(LoginRequiredMixin,TimeRestrictedMixin,CreateView):
     form_class = PostCreateForm
     template_name = 'posts/add-post.html'
     success_url = reverse_lazy('dashboard')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 # def add_post(request):
 #     form = PostCreateForm(request.POST or None, request.FILES or None)
 #     if request.method == 'POST' and form.is_valid():

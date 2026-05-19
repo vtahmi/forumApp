@@ -30,7 +30,7 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
-        return self.email
+        return self.username
 
 class Profile(models.Model):
     user = models.OneToOneField(AppUser, on_delete=models.CASCADE)

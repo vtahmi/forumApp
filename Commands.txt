@@ -22,7 +22,7 @@ py manage.py showmigrations main_app
 python manage.py showmigrations -l
 
 ##delete migration
-py manage.py migrate accounts zero
+py manage.py migrate posts zero
 
 py caller.py
 
@@ -45,6 +45,12 @@ py manage.py startapp todo_app
 
 GIT COMMANDS
 
+git init
+git remote add origin https://github.com/vtahmi/petStangram.git
+git add .
+git commit -m "Initial commit"
+git push -u origin master
+
 git add .
 git commit -m "Update"
 git push
@@ -57,11 +63,24 @@ git stash list
 git stash pop
 
 
+pip freeze > requirements.txt
+pip install -r requirements.txt
 
 
 
+cd "C:\Users\vtahm\OneDrive\Desktop\PYTHON WEB\DJANGOPROJECTS"
+git clone git clone https://github.com/vtahmi/project-name.git
 
 
+cd project-name
+git status
+On branch main
+nothing to commit, working tree clean
+
+Създай виртуална среда
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
 
 
 

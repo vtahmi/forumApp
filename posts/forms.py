@@ -40,15 +40,10 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        exclude = ('approved',)
+        exclude = ('approved', 'author')
         widgets = {
             'language': forms.RadioSelect(attrs={'class': 'language-select'}),
             'date_created': forms.DateTimeInput(format='%d/%m/%Y %H:%M'),
-        }
-        error_messages={
-            'author': {
-                'max_length': "That's too long for a name!"
-            }
         }
 
     def clean_author(self):
@@ -70,7 +65,6 @@ class PostForm(forms.ModelForm):
         return cleaned_data
     def save(self, commit=True):
         post = super().save(commit=False)
-        post.author = post.author.capitalize()
         if commit:
             post.save()
         return post

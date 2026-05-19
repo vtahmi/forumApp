@@ -1,13 +1,16 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from posts.choices import LanguageChoices
 from posts.validators import BadWordValidator
 
+UserModel = get_user_model()
+
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField(validators=[BadWordValidator(bad_words=['bad', 'ugly', 'stupid'])])
-    author = models.CharField(max_length=50)
+    author = models.ForeignKey(UserModel, on_delete=models.CASCADE)
     date_created = models.DateField(auto_now_add=True)
     language = models.CharField(max_length=20, choices=LanguageChoices.choices, default=LanguageChoices.PYTHON)
     image = models.ImageField(upload_to='media', null=True, blank=True)
