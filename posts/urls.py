@@ -9,6 +9,7 @@ urlpatterns = [
     path('navigation/', views.navigation_view, name='navigation'),
     path('index/', views.IndexView.as_view(), name='index'),
     path('redirect/', views.MyRedirectView.as_view(), name='redirect'),
+    path('notify/', views.notify_all_users, name='notify'),
 
     path(
         'post/', include([

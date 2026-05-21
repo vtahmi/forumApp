@@ -1,20 +1,28 @@
+import asyncio
 from datetime import datetime
 
-from django.contrib.auth.decorators import permission_required
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from asgiref.sync import sync_to_async
+from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.forms.models import modelform_factory
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, RedirectView, CreateView, UpdateView, DeleteView, FormView, \
     DetailView, ListView
 
+from forumApp.settings import DEFAULT_EMAIL
 from posts.decorators import measure_execution_time
 from posts.forms import PostForm, PostCreateForm, PostDeleteForm, PostSearchForm, CommentFormSet
 from posts.mixins import TimeRestrictedMixin
 from posts.models import Post
+from posts.tasks import send_approval_email_notification
+
+import asyncio
+
+UserModel = get_user_model()
 
 class IndexView(TemplateView):
     # template_name = 'common/index-test.html'
@@ -49,7 +57,7 @@ class DashboardView(ListView):
         queryset = self.model.objects.all()
         search_value = self.request.GET.get('query')
 
-        if not self.request.user.has_perm(permission_required):
+        if not self.request.user.has_perm(self.permission_required):
             queryset = queryset.filter(approved=True)
 
         if search_value:
@@ -58,7 +66,7 @@ class DashboardView(ListView):
                 Q(content__icontains=search_value) |
                 Q(author__icontains=search_value)
             )
-        return queryset
+        return queryset.order_by('-id')
 
 # def dashboard(request):
 #     search_form = PostSearchForm(request.GET)
@@ -221,6 +229,25 @@ def register(request):
     if request.method == 'POST':
         user = User.objects.create_user(username=username, password=password)
 
+
+def notify_all_users(request):
+    # 1. Вземаме всички имейли от базата данни
+    user_emails = UserModel.objects.values_list('email', flat=True)
+
+    # 2. Обхождаме имейлите и изпращаме задача към Celery за всеки един
+    for email in user_emails:
+        if email:  # Застраховаме се, че потребителят наистина има имейл
+
+            # ВНИМАНИЕ: Използваме .delay(), за да го пратим на Celery!
+            send_approval_email_notification.delay(
+                subject="New Post",
+                message="A Maintenance is taking place",
+                from_email=DEFAULT_EMAIL,  # Ползваме имейла по подразбиране
+                recipient_list=[email],
+            )
+
+    # 3. Връщаме съобщение на потребителя, без да чакаме онези 5 секунди
+    return JsonResponse({"message": "Имейлите се изпращат във фонов режим!"})
 
 
 
